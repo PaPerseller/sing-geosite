@@ -2,7 +2,7 @@ name: Release
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 3 1,11,21 * *"
 jobs:
   build:
     name: Build
@@ -15,7 +15,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: ^1.22
+          go-version: ^1.23
       - name: Build geosite
         id: build
         run: |
@@ -38,16 +38,16 @@ jobs:
       - uses: dev-drprasad/delete-older-releases@v0.3.2
         if: steps.build.outputs.skip != 'true'
         with:
-          keep_latest: 10
+          keep_latest: 1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Release geosite
-        if: steps.build.outputs.skip != 'true'
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.build.outputs.tag }}
-          files: |
-            geosite.db
-            geosite.db.sha256sum
-            geosite-cn.db
-            geosite-cn.db.sha256sum
+#      - name: Release geosite
+#        if: steps.build.outputs.skip != 'true'
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          tag_name: ${{ steps.build.outputs.tag }}
+#          files: |
+#            geosite.db
+#            geosite.db.sha256sum
+#            geosite-cn.db
+#            geosite-cn.db.sha256sum
